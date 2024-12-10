@@ -12,6 +12,7 @@ import { RxCross1 } from "react-icons/rx";
 import { FaBell } from "react-icons/fa";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { BiSolidCalendarExclamation } from "react-icons/bi";
+import { markAttendance } from "../api/attendance";
 
 
 function MarkAttendance() {
@@ -46,9 +47,75 @@ function MarkAttendance() {
   }, [navigate]);
   const [location, setLocation] = useState({ latitude: null, longitude: null });
 
+  // useEffect(() => {
+  //   let watchId;
+
+  //   if (navigator.geolocation) {
+  //     watchId = navigator.geolocation.watchPosition(
+  //       (position) => {
+  //         const coords = {
+  //           latitude: position.coords.latitude,
+  //           longitude: position.coords.longitude,
+  //         };
+  //         console.log(coords);
+  //         setLocation(coords);
+
+  //       },
+  //       (error) => {
+  //         console.error("Error getting location:", error.message);
+  //         alert("Failed to retrieve location.");
+  //       },
+  //       {
+  //         enableHighAccuracy: true, // Use GPS for high accuracy
+  //         maximumAge: 0, // Prevent caching old location data
+  //         timeout: 10000, // Maximum time to wait for location
+  //       }
+  //     );
+  //   } else {
+  //     alert("Geolocation is not supported by this browser.");
+  //   }
+
+  //   // Cleanup function to stop watching the location
+  //   return () => {
+  //     if (watchId) {
+  //       navigator.geolocation.clearWatch(watchId);
+  //     }
+  //   };
+  // }, []);
   useEffect(() => {
     let watchId;
 
+    // First, try getting the current position
+    const getLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const coords = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            };
+            console.log("Current location:", coords);
+            setLocation(coords);
+          },
+          (error) => {
+            console.error("Error getting location:", error.message);
+            alert("Failed to retrieve location.");
+          },
+          {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 10000,
+          }
+        );
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    };
+
+    // Try to get location immediately on component mount
+    getLocation();
+
+    // If current position works, start watching for position updates
     if (navigator.geolocation) {
       watchId = navigator.geolocation.watchPosition(
         (position) => {
@@ -56,9 +123,8 @@ function MarkAttendance() {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           };
-          console.log(coords);
+          console.log("Updated location:", coords);
           setLocation(coords);
-
         },
         (error) => {
           console.error("Error getting location:", error.message);
@@ -67,11 +133,9 @@ function MarkAttendance() {
         {
           enableHighAccuracy: true, // Use GPS for high accuracy
           maximumAge: 0, // Prevent caching old location data
-          timeout: 8000, // Maximum time to wait for location
+          timeout: 10000, // Maximum time to wait for location
         }
       );
-    } else {
-      alert("Geolocation is not supported by this browser.");
     }
 
     // Cleanup function to stop watching the location
@@ -80,33 +144,9 @@ function MarkAttendance() {
         navigator.geolocation.clearWatch(watchId);
       }
     };
-  }, []);
+  }, []); 
 
-  // useEffect(() => {
-  //   if (navigator.geolocation) {
-  //     navigator.geolocation.getCurrentPosition(
-  //       (position) => {
-  //         const coords = {
-  //           latitude: position.coords.latitude,
-  //           longitude: position.coords.longitude,
-  //         };
-  //         console.log(coords);
-  //         setLocation(coords);
-  //       },
-  //       (error) => {
-  //         console.error("Error getting location:", error.message);
-  //         alert("Failed to retrieve location. Please check device settings.");
-  //       },
-  //       {
-  //         enableHighAccuracy: true,
-  //         maximumAge: 0,
-  //         timeout: 10000, // Increase timeout to 10 seconds
-  //       }
-  //     );
-  //   } else {
-  //     alert("Geolocation is not supported by this browser.");
-  //   }
-  // }, []);
+  
   
 
 
@@ -219,10 +259,10 @@ function MarkAttendance() {
       return;
     }
 
-    // if (!productivity) {
-    //   alert("Mention your todays Productivity ");
-    //   return;
-    // }
+    if (!productivity) {
+      alert("Mention your todays Productivity ");
+      return;
+    }
   
     const locationString = `${location.latitude}, ${location.longitude}`;
   
@@ -243,23 +283,24 @@ function MarkAttendance() {
         return;
       }
   
-      const response = await axios.post(
-        "http://192.168.1.17:5000/api/attendance/mark",
-        attendanceData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await markAttendance(attendanceData)
+      //  axios.post(
+      //   "http://192.168.1.8:5000/api/attendance/mark",
+      //   attendanceData,
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
   
       console.log("Submission Success:", response.data);
   
       // Clear localStorage after submission
       localStorage.removeItem("attendanceData");
   
-      navigate("/success"); // Redirect to success page
+      navigate("/success"); 
     } catch (error) {
       console.error("Error during submission:", error);
       alert("Failed to submit attendance. Please try again.");
@@ -290,21 +331,10 @@ function MarkAttendance() {
   return (
     <div className="poppins flex flex-col md:flex-row min-h-screen bg-zinc-200">
       {/* Sidebar */}
-      {/* <div
-        className={`absolute md:relative z-10 w-64 bg-white text-white px-6 transition-transform ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0`}
-      >
-        <button
-          className="md:hidden mb-4 text-white bg-blue-500 px-3 py-2 rounded hover:bg-blue-600"
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        >
-          Toggle Menu
-        </button > */}
          {!isSidebarOpen && (
     <button
       className="fixed top-0 left-0 z-20 text-black px-3 py-2 rounded-full hover:bg-blue-600 md:hidden"
-      onClick={() => setIsSidebarOpen(true)} // Open the sidebar
+      onClick={() => setIsSidebarOpen(true)} 
     >
       <TiThMenu  className=""/>
     </button>
@@ -389,7 +419,7 @@ function MarkAttendance() {
           )}
         </div>
 
-        {/* **Conditional Rendering: Show Buttons or Text Editor** */}
+      
         {!(checkInTime && checkOutTime) ? (
           <div className="flex justify-between mb-6 space-x-2">
             {!checkInTime && (
@@ -410,7 +440,7 @@ function MarkAttendance() {
             )}
           </div>
         ) : (
-          // **Productivity Text Editor**
+        
           <div className="mb-6">
             <label
               htmlFor="productivity"
@@ -421,6 +451,7 @@ function MarkAttendance() {
             <textarea
               id="productivity"
               value={productivity}
+              required
               onChange={handleProductivityChange}
               placeholder="Describe your productivity for today..."
               className="w-full px-4 py-2 bg-gray-100 text-gray-700 border rounded-lg focus:outline-none resize-none h-32"

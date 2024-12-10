@@ -108,13 +108,13 @@ function AttendancePage() {
         checkout: currentTime,
         image: capturedImage,
         location: location,
-        productivity: productivity, // **Include productivity in localStorage**
+        productivity: productivity, 
       })
     );
     console.log(`Check-out Time : ${currentTime}`);
   };
 
-  // Handle Capture Image
+  
   const handleCaptureImage = () => {
     const canvas = canvasRef.current;
     const video = videoRef.current;
@@ -127,7 +127,7 @@ function AttendancePage() {
       const imageData = canvas.toDataURL("image/png");
       setCapturedImage(imageData);
 
-      // Save image data to localStorage on capture
+      
       const storedData = JSON.parse(localStorage.getItem("attendanceData")) || {};
       localStorage.setItem(
         "attendanceData",
@@ -136,7 +136,7 @@ function AttendancePage() {
     }
   };
 
-  // **New Handler for Productivity Input**
+ 
   const handleProductivityChange =async (e) => {
     setProductivity(e.target.value);
     const storedData = JSON.parse(localStorage.getItem("attendanceData")) || {};
@@ -158,10 +158,6 @@ function AttendancePage() {
       return;
     }
 
-    // if (!productivity) {
-    //   alert("Mention your todays Productivity ");
-    //   return;
-    // }
   
     const locationString = `${location.latitude}, ${location.longitude}`;
   
@@ -170,20 +166,20 @@ function AttendancePage() {
       image: capturedImage,
       checkin: checkInTime ? new Date(checkInTime).toISOString() : "",
       checkout: checkOutTime ? new Date(checkOutTime).toISOString() : "",
-      description: productivity, // Include productivity as description
+      description: productivity, 
     };
   
     console.log("Attendance Data Submitted:", attendanceData);
   
     try {
-      const token = localStorage.getItem("token"); // Token assumed to be stored in localStorage
+      const token = localStorage.getItem("token"); 
       if (!token) {
         alert("Authorization token is missing. Please log in again.");
         return;
       }
   
       const response = await axios.post(
-        "http://192.168.1.17:5000/api/attendance/mark",
+        "http://192.168.1.8:5000/api/attendance/mark",
         attendanceData,
         {
           headers: {
@@ -195,7 +191,7 @@ function AttendancePage() {
   
       console.log("Submission Success:", response.data);
   
-      // Clear localStorage after submission
+      
       localStorage.removeItem("attendanceData");
   
       navigate("/success"); // Redirect to success page

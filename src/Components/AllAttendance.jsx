@@ -13,6 +13,7 @@ import { SlCalender } from "react-icons/sl";
 import { TiThMenu } from "react-icons/ti";
 // import { ImCross } from "react-icons/im";
 import { RxCross1 } from "react-icons/rx";
+import { getAllAttendance } from "../api/attendance";
 
 const AllAttendance = () => {
   const [attendanceRecords, setAttendanceRecords] = useState([]);
@@ -64,15 +65,19 @@ const AllAttendance = () => {
     const fetchAttendance = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          "http://192.168.1.17:5000/api/attendance",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await 
+        getAllAttendance()
+        // axios.get(
+        //   "http://192.168.1.8:5000/api/attendance",
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   }
+        // );
         console.log(response.data);
+        
+
         if (response.data.status === "success") {
           setAttendanceRecords(response.data.attendanceRecords);
         }
@@ -232,6 +237,7 @@ const AllAttendance = () => {
                     </td>
                     <td className="py-3 px-4 text-sm">
                       {/* {record?.checkin ? record.checkin.split("T")[1]?.split(".")[0] : "N/A"} */}
+                      { console.log(`checkin":${record?.checkin ? record.checkin.split("T")[1]?.split(".")[0] : "N/A"}`)}
                       {record?.checkin
                         ? new Date(record.checkin).toLocaleTimeString("en-IN", {
                             hour: "2-digit",
@@ -241,6 +247,7 @@ const AllAttendance = () => {
                         : "N/A"}
                     </td>
                     <td className="py-3 px-4 text-sm">
+                     { console.log(`checkout":${record?.checkout ? record.checkout.split("T")[1]?.split(".")[0] : "N/A"}`)}
                       {/* {record?.checkout ? record.checkout.split("T")[1]?.split(".")[0] : "N/A"} */}
                       {record?.checkout
                         ? new Date(record.checkout).toLocaleTimeString(

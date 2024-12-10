@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { login } from "../api/auth";
 
 function Login() {
   const navigate = useNavigate();
@@ -22,13 +23,15 @@ function Login() {
     e.preventDefault();
     try {
       // Make API call
-      const response = await axios.post(
-        "http://192.168.1.17:5000/api/auth/login",
-        formData
-      );
+      const response = await login(formData)
+      
+      // axios.post(
+      //   "http://192.168.1.8:5000/api/auth/login",
+      //   formData
+      // );
       const { token, userType } = response.data;
 
-      // Store token in local storage for further authenticated API calls
+     
       localStorage.setItem("token", token);
 
       // Redirect based on user type
@@ -46,7 +49,7 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen poppins bg-gradient-to-r from-teal-100 to-cyan-600 flex items-center justify-center">
+    <div className="min-h-screen poppins bg-gradient-to-r from-teal-100 to-cyan-700 flex items-center justify-center">
       <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md transform transition-all duration-500 hover:scale-105 hover:shadow-2xl">
         <h2 className="text-3xl font-semibold text-center mb-6 text-gray-700">
           Login

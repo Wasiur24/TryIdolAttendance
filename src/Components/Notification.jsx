@@ -14,6 +14,8 @@ import { SlCalender } from "react-icons/sl";
 import { TiThMenu } from "react-icons/ti";
 // import { ImCross } from "react-icons/im";
 import { RxCross1 } from "react-icons/rx";
+import { AllALerts, GenerateAlert } from "../api/alert";
+import { AllEmployee } from "../api/auth";
 
 const Notification = () => {
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ const Notification = () => {
   const handleDashboard = () => navigate("/dashboard");
   const handleAttendance = () => navigate("/allattendance");
   const handleUserDetails = () => navigate("/reg");
-  const handleDownload = () => { /* Logic for download */ };
+  const handleDownload = () => {  };
   const handleLogOut = () => {
     localStorage.removeItem("token");
     navigate("/");
@@ -41,11 +43,12 @@ const Notification = () => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Authorization token missing");
 
-      const response = await axios.get("http://192.168.1.17:5000/api/alert/all", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await AllALerts()
+      // axios.get("http://192.168.1.8:5000/api/alert/all", {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
 
       if (response.data.success) {
         setAlerts(response.data.data);
@@ -64,11 +67,12 @@ const Notification = () => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Authorization token missing");
 
-      const response = await axios.get("http://192.168.1.17:5000/api/auth/all", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await  AllEmployee()
+      // axios.get("http://192.168.1.8:5000/api/auth/all", {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
       console.log(response.data);
         setEmployees(response.data.users);
 
@@ -89,18 +93,19 @@ const Notification = () => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Authorization token missing");
 
-      const response = await axios.post(
-        "http://192.168.1.17:5000/api/alert",
-        {
-          ...newAlert,
-          targetUser: newAlert.targetUser === "all" ? null : newAlert.targetUser, // Send null for "For All" option
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await GenerateAlert(newAlert)
+      //  axios.post(
+      //   "http://192.168.1.8:5000/api/alert",
+      //   {
+      //     ...newAlert,
+      //     targetUser: newAlert.targetUser === "all" ? null : newAlert.targetUser, // Send null for "For All" option
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
 
       if (response.data.success) {
         setAlerts([response.data.data, ...alerts]);

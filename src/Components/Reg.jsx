@@ -16,6 +16,7 @@ import { SlCalender } from "react-icons/sl";
 import { TiThMenu } from "react-icons/ti";
 // import { ImCross } from "react-icons/im";
 import { RxCross1 } from "react-icons/rx";
+import { register } from "../api/auth";
 
 const Reg = () => {
   const navigate = useNavigate();
@@ -86,11 +87,13 @@ const Reg = () => {
       }
   
     
-      const response = await axios.post('http://192.168.1.17:5000/api/auth/register', formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const response = await 
+      register(formData)
+      // axios.post('http://192.168.1.8:5000/api/auth/register', formData, {
+      //   headers: {
+      //     'Authorization': `Bearer ${token}`,
+      //   },
+      // });
   
       if (response.status === 201) {
         navigate('/usercreated'); 

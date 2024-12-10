@@ -1,24 +1,19 @@
-
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { FaPowerOff, FaPlus } from "react-icons/fa";
 import { BiSolidCalendarExclamation } from "react-icons/bi";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-// import logo from "../assets/loga.png";
+import { TiThMenu } from "react-icons/ti";
+import { RxCross1 } from "react-icons/rx";
+import { createLeave, Myleave } from "../api/leave";
 import logo from '../assets/logo.jpg';
 import { FaBell } from "react-icons/fa";
-import { TiThMenu } from "react-icons/ti";
-// import { ImCross } from "react-icons/im";
-import { RxCross1 } from "react-icons/rx";
-
 function UserLeaveStatus() {
   const navigate = useNavigate();
-  const [leaveRequests, setLeaveRequests] = useState([]); // Store all leave requests
-  const [newLeaveRequest, setNewLeaveRequest] = useState({ subject: "", message: "", status: "New" }); // For a new leave request
+  const [leaveRequests, setLeaveRequests] = useState([]); //saari leaves aayengi....table me map lagega
+  const [newLeaveRequest, setNewLeaveRequest] = useState({ subject: "", message: "", status: "New" }); // modal me new leave banao
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const [showModal, setShowModal] = useState(false); 
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -31,11 +26,7 @@ function UserLeaveStatus() {
 
   const fetchLeaveStatus = async () => {
     try {
-      const response = await axios.get("http://192.168.1.17:5000/api/leave/my-leaves", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await Myleave(); //API CALL HUI HAI YAHA SE
       if (response.data.success) {
         const formattedLeaves = response.data.data.map((leave) => ({
           subject: leave.subject,
@@ -68,19 +59,10 @@ function UserLeaveStatus() {
     }
 
     try {
-      const response = await axios.post(
-        "http://192.168.1.17:5000/api/leave/",
-        newLeaveRequest,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      alert("Leave request sent successfully!");
-      fetchLeaveStatus(); // Fetch updated leave status
+      await createLeave(newLeaveRequest);
+      fetchLeaveStatus(); 
       setNewLeaveRequest({ subject: "", message: "", status: "New" }); // Clear the form
-      setShowModal(false); // Close the modal
+      setShowModal(false); 
     } catch (error) {
       console.error("Error sending leave request:", error);
       alert("Failed to send leave request. Please try again.");
@@ -106,37 +88,25 @@ function UserLeaveStatus() {
   return (
     <div className="poppins flex flex-col md:flex-row min-h-screen bg-zinc-200">
       {/* Sidebar */}
-      {/* <div
-        className={`absolute md:relative z-10 w-64 bg-white text-white px-6 transition-transform ${
+      {!isSidebarOpen && ( //side bar is not open,to jaise click kro open ho
+        <button
+          className="fixed top-0 left-0 z-20 text-black px-3 py-2 rounded-full hover:bg-blue-600 md:hidden"
+          onClick={() => setIsSidebarOpen(true)}
+        >
+          <TiThMenu />
+        </button>
+      )}
+      <div
+        className={`absolute md:relative z-10 w-64 bg-white text-black px-6 transition-transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0`}
       >
         <button
-          className="md:hidden mb-4 text-white bg-blue-500 px-3 py-2 rounded hover:bg-blue-600"
+          className="lg:hidden mt-2 text-black rounded hover:bg-blue-600"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         >
-          Toggle Menu
-        </button> */}
-        {!isSidebarOpen && (
-    <button
-      className="fixed top-0 left-0 z-20 text-black px-3 py-2 rounded-full hover:bg-blue-600 md:hidden"
-      onClick={() => setIsSidebarOpen(true)} // Open the sidebar
-    >
-      <TiThMenu  className=""/>
-    </button>
-  )}
-
-  <div
-  className={`absolute md:relative z-10 w-64 bg-white text-black px-6 transition-transform ${
-    isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-  } md:translate-x-0`}
->
-  <button
-    className="lg:hidden mt-2 text-black  rounded hover:bg-blue-600"
-    onClick={() => setIsSidebarOpen(!isSidebarOpen)} // Toggle the state
-  >
-    <RxCross1 className="font-thin"/>
-  </button>
+          <RxCross1 />
+        </button>
         <div className="mr-4">
           <img className="h-[100px] object-cover" src={logo} alt="" />
         </div>
@@ -151,7 +121,7 @@ function UserLeaveStatus() {
             onClick={handleMarkAttendance}
             className="px-4 py-2 text-center bg-zinc-200 text-black rounded hover:bg-zinc-300 tracking-tighter hover:text-black duration-300 flex justify-evenly items-center"
           >
-            <IoMdCheckmarkCircleOutline className="font-bold text-xl " />
+            <IoMdCheckmarkCircleOutline className="font-bold text-xl" />
             Mark Attendance
           </button>
           <button
@@ -165,7 +135,7 @@ function UserLeaveStatus() {
             onClick={handleLogOut}
             className=" px-4 py-2 mt-96 bg-blue-600 text-white rounded hover:bg-blue-700 flex justify-center items-center gap-3"
           >
-            <FaPowerOff className="font-thin text-xl " />
+            <FaPowerOff className="font-thin text-xl" />
             Logout
           </button>
         </div>
@@ -179,7 +149,6 @@ function UserLeaveStatus() {
               <tr className="bg-blue-200 text-blue-900">
                 <th className="px-4 py-2">Subject</th>
                 <th className="px-4 py-2">Message</th>
-                {/* <th className="px-4 py-2">Actions</th> */}
                 <th className="px-4 py-2">Status</th>
               </tr>
             </thead>
@@ -188,20 +157,11 @@ function UserLeaveStatus() {
                 <tr key={index} className="border-b border-gray-300">
                   <td className="px-4 py-2">{leave.subject}</td>
                   <td className="px-4 py-2">{leave.message}</td>
-                  {/* <td className="px-4 py-2">-</td> */}
                   <td className="px-4 py-2">{leave.status}</td>
                 </tr>
               ))}
-              {newLeaveRequest.subject && (
-                <tr className="border-b border-gray-300">
-                  <td className="px-4 py-2">{newLeaveRequest.subject}</td>
-                  <td className="px-4 py-2">{newLeaveRequest.message}</td>
-                  <td className="px-4 py-2">-</td>
-                  <td className="px-4 py-2">{newLeaveRequest.status}</td>
-                </tr>
-              )}
               <tr>
-                <td colSpan={4} className="px-4 py-2 absolute right-10 mt-4">
+                <td colSpan={3} className="px-4 py-2 absolute right-10 mt-4">
                   <button
                     onClick={addNewLeaveRequest}
                     className="bg-blue-600 text-white px-7 py-2 rounded-full flex justify-center items-center gap-2"
@@ -244,7 +204,7 @@ function UserLeaveStatus() {
             </div>
             <div className="flex justify-end gap-4">
               <button
-                onClick={() => setShowModal(false)}
+                onClick={() => setShowModal(false)}   //modal gayab
                 className="bg-gray-500 text-white px-4 py-2 rounded"
               >
                 Cancel
@@ -264,6 +224,7 @@ function UserLeaveStatus() {
 }
 
 export default UserLeaveStatus;
+
 
 
 

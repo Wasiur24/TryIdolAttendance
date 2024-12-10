@@ -15,7 +15,9 @@ import { SlCalender } from "react-icons/sl";
 import { TiThMenu } from "react-icons/ti";
 // import { ImCross } from "react-icons/im";
 import { RxCross1 } from "react-icons/rx";
-
+import { AllEmployee } from "../api/auth";
+import { deleteUser } from "../api/auth";
+import { EditUser } from "../api/auth";
 function Dashboard() {
   const navigate = useNavigate();
 
@@ -35,14 +37,15 @@ function Dashboard() {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          "http://192.168.1.17:5000/api/auth/all",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+         const response = await AllEmployee()
+        //axios.get(
+        //   "http://192.168.1.8:5000/api/auth/all",
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   }
+        // );
         console.log(response.data);
         setUsers(response.data.users);
       } catch (error) {
@@ -77,9 +80,10 @@ function Dashboard() {
   const handleDelete = async (id) => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(`http://192.168.1.17:5000/api/auth/delete/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await deleteUser(id)
+      // await axios.delete(`http://192.168.1.8:5000/api/auth/delete/${id}`, {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // });
       setUsers(users.filter((user) => user._id !== id));
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -103,8 +107,9 @@ function Dashboard() {
     const token = localStorage.getItem("token");
     try {
       const updatedUser = { ...editingUser };
+      //await EditUser()
       await axios.put(
-        `http://192.168.1.17:5000/api/auth/update/${editingUser._id}`,
+        `http://192.168.1.18:5000/api/auth/update/${editingUser._id}`,
         updatedUser,
         { headers: { Authorization: `Bearer ${token}` } }
       );

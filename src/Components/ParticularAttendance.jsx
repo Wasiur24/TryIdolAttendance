@@ -14,6 +14,7 @@ import { SlCalender } from "react-icons/sl";
 import { TiThMenu } from "react-icons/ti";
 // import { ImCross } from "react-icons/im";
 import { RxCross1 } from "react-icons/rx";
+import { particularAttendance } from "../api/attendance";
 
 const ParticularAttendance = () => {
   const navigate = useNavigate();
@@ -37,14 +38,15 @@ const ParticularAttendance = () => {
 
     const fetchAttendance = async () => {
       try {
-        const response = await axios.get(
-          `http://192.168.1.17:5000/api/attendance/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await particularAttendance(id)
+        // axios.get(
+        //   `http://192.168.1.8:5000/api/attendance/${id}`,
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   }
+        // );
         console.log(response.data);
         // Validate API response
         const fetchedData = Array.isArray(response.data.userAttendance)
@@ -52,6 +54,7 @@ const ParticularAttendance = () => {
           : [];
         setAttendanceData(fetchedData);
       } catch (error) {
+        console.log(error)
         console.error("Error fetching attendance data:", error);
         setAttendanceData([]);
       }
@@ -243,7 +246,7 @@ const ParticularAttendance = () => {
                       {record?.checkin ? record.checkin.split("T")[0] : "N/A"}
                     </td>
 
-                    <td className="border border-gray-300 px-4 py-2">
+                    {/* <td className="border border-gray-300 px-4 py-2">
                       {record?.checkin
                         ? new Date(record.checkin).toLocaleTimeString("en-IN", {
                             hour: "2-digit",
@@ -262,7 +265,32 @@ const ParticularAttendance = () => {
                             }
                           )
                         : "N/A"}
-                    </td>
+                    </td> */}
+                   <td className="border border-gray-300 px-4 py-2">
+  {record?.checkin
+    ? new Date(record.checkin)
+        .toLocaleTimeString("en-IN", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit", // Include seconds
+          timeZone: "Asia/Kolkata", // Explicitly set timezone to IST
+        })
+    : "N/A"}
+</td>
+
+<td className="border border-gray-300 px-4 py-2">
+  {record?.checkout
+    ? new Date(record.checkout)
+        .toLocaleTimeString("en-IN", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit", // Include seconds
+          timeZone: "Asia/Kolkata", // Explicitly set timezone to IST
+        })
+    : "N/A"}
+</td>
+
+
 
                     <td className="border border-gray-300 px-4 py-2">
                       {record?.location || "N/A"}

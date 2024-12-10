@@ -12,6 +12,7 @@ import { SlCalender } from "react-icons/sl";
 import { TiThMenu } from "react-icons/ti";
 // import { ImCross } from "react-icons/im";
 import { RxCross1 } from "react-icons/rx";
+import { DoLeave, getAllLeaves } from "../api/leave";
 
 const AdminLeavePage = () => {
   const navigate = useNavigate();
@@ -29,11 +30,16 @@ const AdminLeavePage = () => {
 
   const fetchLeaves = async () => {
     try {
-      const response = await axios.get("http://192.168.1.17:5000/api/leave/", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await getAllLeaves()
+    //   export const getAllLeaves = async () => {
+    //     return API.get("/leave/");
+    // };
+      // axios.get("http://192.168.1.8:5000/api/leave/", {
+      //   headers: {
+      //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+      //   },
+      // })
+   console.log(response.data);
       setLeaves(response.data.data); // Assuming `data.data` holds the leave requests
     } catch (err) {
       setError("Failed to fetch leave requests");
@@ -64,19 +70,21 @@ const AdminLeavePage = () => {
   const handleDownload = () => navigate("/download");
   const handleLeaveAction = async (leaveId, action) => {
     try {
-      await axios.put(
-        `http://192.168.1.17:5000/api/leave/${leaveId}`,
-        {
-          status: action,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, 
-          },
-        }
-      );
+      await DoLeave(leaveId, action)
+      // await axios.put(
+      //   `http://192.168.1.8:5000/api/leave/${leaveId}`,
+      //   {
+      //     status: action,
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${localStorage.getItem("token")}`, 
+      //     },
+      //   }
+      // );
       fetchLeaves(); // Refresh the data after action
     } catch (err) {
+      console.log(err)
       setError(`Failed to ${action} leave`);
     }
   };
@@ -196,7 +204,7 @@ const AdminLeavePage = () => {
             <tbody>
               {leaves.map((leave) => (
                 <tr key={leave._id} className="border-b">
-                  <td className="px-4 py-2">{leave.userId.name}</td>
+                  <td className="px-4 py-2">{leave?.userId?.name}</td>
                   {/* <td className="px-4 py-2">{leave.userId.position}</td> */}
                   <td className="px-4 py-2">{leave.subject}</td>
                   <td className="px-4 py-2">{leave.message}</td>
@@ -209,7 +217,7 @@ const AdminLeavePage = () => {
                       <>
                         <button
                           onClick={() => handleLeaveAction(leave._id, "approved")}
-                          className="px-3 py-1 w-28 bg-green-500 text-white rounded hover:bg-green-600 mb-2"
+                          className="px-3 py-1 w-28 bg-green-500 text-white rounded hover:bg-green-600 mb-2 mr-2"
                         >
                           Approve
                         </button>
