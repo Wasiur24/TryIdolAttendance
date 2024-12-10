@@ -109,7 +109,7 @@ function Dashboard() {
       const updatedUser = { ...editingUser };
       //await EditUser()
       await axios.put(
-        `http://192.168.1.18:5000/api/auth/update/${editingUser._id}`,
+        `https://tryhr-be.onrender.com/api/auth/update/${editingUser._id}`,
         updatedUser,
         { headers: { Authorization: `Bearer ${token}` } }
       );

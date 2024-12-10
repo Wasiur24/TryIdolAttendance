@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 function UserCreated() {
   const navigate = useNavigate();
+  const handleNavigate = () => {
+    navigate('/reg');
+  };
   return (
     <div className="min-h-screen bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
       <div className="relative flex flex-col items-center justify-center p-10 bg-white rounded-lg shadow-2xl max-w-md w-full transform transition duration-500 hover:scale-110 hover:rotate-1">
@@ -37,7 +40,7 @@ function UserCreated() {
 
         {/* Hovering Button */}
         <button
-          onClick={() => window.location.href = '/reg'}
+         onClick={() => navigate('/reg')}
           className="mt-6 px-6 py-3 bg-gradient-to-r from-green-500 to-teal-500 text-white text-lg font-medium rounded-lg shadow-md transition-transform duration-500 hover:scale-110 hover:rotate-2"
         >
           Register Another User
