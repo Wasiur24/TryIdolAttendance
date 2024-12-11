@@ -46,7 +46,7 @@ function Dashboard() {
         //     },
         //   }
         // );
-        console.log(response.data);
+        // console.log(response.data);
         setUsers(response.data.users);
       } catch (error) {
         console.error("Error fetching users:", error);

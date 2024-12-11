@@ -75,7 +75,7 @@ const AllAttendance = () => {
         //     },
         //   }
         // );
-        console.log(response.data);
+       // console.log(response.data);
         
 
         if (response.data.status === "success") {
@@ -237,7 +237,7 @@ const AllAttendance = () => {
                     </td>
                     <td className="py-3 px-4 text-sm">
                       {/* {record?.checkin ? record.checkin.split("T")[1]?.split(".")[0] : "N/A"} */}
-                      { console.log(`checkin":${record?.checkin ? record.checkin.split("T")[1]?.split(".")[0] : "N/A"}`)}
+                      {/* { console.log(`checkin":${record?.checkin ? record.checkin.split("T")[1]?.split(".")[0] : "N/A"}`)} */}
                       {record?.checkin
                         ? new Date(record.checkin).toLocaleTimeString("en-IN", {
                             hour: "2-digit",
@@ -247,7 +247,7 @@ const AllAttendance = () => {
                         : "N/A"}
                     </td>
                     <td className="py-3 px-4 text-sm">
-                     { console.log(`checkout":${record?.checkout ? record.checkout.split("T")[1]?.split(".")[0] : "N/A"}`)}
+                     {/* { console.log(`checkout":${record?.checkout ? record.checkout.split("T")[1]?.split(".")[0] : "N/A"}`)} */}
                       {/* {record?.checkout ? record.checkout.split("T")[1]?.split(".")[0] : "N/A"} */}
                       {record?.checkout
                         ? new Date(record.checkout).toLocaleTimeString(
@@ -267,7 +267,7 @@ const AllAttendance = () => {
                       {record.image ? (
                         <a
                           className="text-yellow-600"
-                          href={`http://192.168.1.17:5000/images/${record.image}`}
+                          href={`https://tryhr-be.onrender.com/images/${record.image}`}
                         >
                           View Image
                         </a>

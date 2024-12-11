@@ -73,7 +73,7 @@ const Notification = () => {
       //     Authorization: `Bearer ${token}`,
       //   },
       // });
-      console.log(response.data);
+      // console.log(response.data);
         setEmployees(response.data.users);
 
       if (response.data.success) {

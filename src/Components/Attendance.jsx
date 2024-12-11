@@ -58,7 +58,7 @@ function AttendancePage() {
         }
       })
       .catch((err) => {
-        console.error("Error accessing the camera: ", err);
+        // console.error("Error accessing the camera: ", err);
         alert("Could not access the camera.");
       });
 
@@ -94,7 +94,7 @@ function AttendancePage() {
         productivity: productivity, 
       })
     );
-    console.log(`Check-in Time : ${currentTime}`);
+    // console.log(`Check-in Time : ${currentTime}`);
   };
 
  
@@ -111,7 +111,7 @@ function AttendancePage() {
         productivity: productivity, 
       })
     );
-    console.log(`Check-out Time : ${currentTime}`);
+    // console.log(`Check-out Time : ${currentTime}`);
   };
 
   
@@ -169,7 +169,7 @@ function AttendancePage() {
       description: productivity, 
     };
   
-    console.log("Attendance Data Submitted:", attendanceData);
+    // console.log("Attendance Data Submitted:", attendanceData);
   
     try {
       const token = localStorage.getItem("token"); 
@@ -189,7 +189,7 @@ function AttendancePage() {
         }
       );
   
-      console.log("Submission Success:", response.data);
+      // console.log("Submission Success:", response.data);
   
       
       localStorage.removeItem("attendanceData");

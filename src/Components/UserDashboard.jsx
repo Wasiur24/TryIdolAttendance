@@ -135,7 +135,12 @@ function UserDashboard() {
                 <p className="text-zinc-600 tracking-tight leading-tight mt-5 text-base">
                   {alert.message}
                 </p>
-                <p className="text-sm text-zinc-500 mt-2">
+                <p 
+                // className="text-sm text-zinc-500 mt-2"
+                className={`${
+                  alert.targetUser ? "text-yellow-700 mt-2 text-sm" : "text-zinc-500 mt-2 text-sm"
+                }`}
+                >
                   {alert.targetUser ? "For You" : "For All"} -{" "}
                   {new Date(alert.createdAt).toLocaleDateString()}
                 </p>

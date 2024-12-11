@@ -47,7 +47,7 @@ const ParticularAttendance = () => {
         //     },
         //   }
         // );
-        console.log(response.data);
+        // console.log(response.data);
         // Validate API response
         const fetchedData = Array.isArray(response.data.userAttendance)
           ? response.data.userAttendance
@@ -300,7 +300,7 @@ const ParticularAttendance = () => {
                       {record?.image ? (
                         <a
                           className="text-yellow-600 text-center"
-                          href={`http://192.168.1.17:5000/images/${record.image}`}
+                          href={`https://tryhr-be.onrender.com/images/${record.image}`}
                         >
                           View Image
                         </a>

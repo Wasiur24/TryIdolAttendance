@@ -39,7 +39,7 @@ const AdminLeavePage = () => {
       //     Authorization: `Bearer ${localStorage.getItem("token")}`,
       //   },
       // })
-   console.log(response.data);
+  // console.log(response.data);
       setLeaves(response.data.data); // Assuming `data.data` holds the leave requests
     } catch (err) {
       setError("Failed to fetch leave requests");

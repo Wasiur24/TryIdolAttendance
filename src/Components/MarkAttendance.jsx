@@ -94,7 +94,7 @@ function MarkAttendance() {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
             };
-            console.log("Current location:", coords);
+            // console.log("Current location:", coords);
             setLocation(coords);
           },
           (error) => {
@@ -123,7 +123,7 @@ function MarkAttendance() {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           };
-          console.log("Updated location:", coords);
+          // console.log("Updated location:", coords);
           setLocation(coords);
         },
         (error) => {
@@ -195,7 +195,7 @@ function MarkAttendance() {
         productivity: productivity, 
       })
     );
-    console.log(`Check-in Time : ${currentTime}`);
+    // console.log(`Check-in Time : ${currentTime}`);
   };
 
  
@@ -212,7 +212,7 @@ function MarkAttendance() {
         productivity: productivity, // **Include productivity in localStorage**
       })
     );
-    console.log(`Check-out Time : ${currentTime}`);
+    // console.log(`Check-out Time : ${currentTime}`);
   };
 
   // Handle Capture Image
@@ -274,7 +274,7 @@ function MarkAttendance() {
       description: productivity, // Include productivity as description
     };
   
-    console.log("Attendance Data Submitted:", attendanceData);
+    // console.log("Attendance Data Submitted:", attendanceData);
   
     try {
       const token = localStorage.getItem("token"); // Token assumed to be stored in localStorage
