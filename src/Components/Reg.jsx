@@ -17,10 +17,11 @@ import { TiThMenu } from "react-icons/ti";
 // import { ImCross } from "react-icons/im";
 import { RxCross1 } from "react-icons/rx";
 import { register } from "../api/auth";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 
 const Reg = () => {
   const navigate = useNavigate();
-
+   const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const handleDashboard = () => {
     navigate("/dashboard");
   };
@@ -257,10 +258,11 @@ const Reg = () => {
             </div>
 
             {/* Password */}
+            <div className="relative">
             <div>
               <label htmlFor="password" className="block text-gray-700">Password</label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
                 value={formData.password}
@@ -270,6 +272,16 @@ const Reg = () => {
                 required
               />
             </div>
+              <div
+              className="absolute top-1/2 transform -translate-y-1/2 right-3 flex items-center cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? (
+                <FaEyeSlash className="text-gray-500 mt-7" />
+              ) : (
+                <FaEye className="text-gray-500 mt-7" />
+              )}
+            </div></div>
 
             {/* Employee ID */}
             <div>

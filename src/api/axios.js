@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://tryhr-be.onrender.com/api", 
+ baseURL: "https://tryhr-be.onrender.com/api", 
 });
 
 // Interceptor to attach token

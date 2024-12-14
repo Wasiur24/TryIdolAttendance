@@ -1,8 +1,10 @@
 
 
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/auth";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 
 function Login() {
   const navigate = useNavigate();
@@ -10,6 +12,7 @@ function Login() {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const [error, setError] = useState("");
   const [statusMessage, setStatusMessage] = useState(""); //message ke lie
   const handleChange = (e) => {
@@ -54,7 +57,7 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen poppins bg-gradient-to-r from-teal-100 to-cyan-700 flex items-center justify-center">
+    <div className="min-h-screen sm:h-screen sm:w-screen poppins bg-gradient-to-r from-teal-100 to-cyan-700 flex items-center justify-center">
       <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md transform transition-all duration-500 hover:scale-105 hover:shadow-2xl">
         <h2 className="text-3xl font-semibold text-center mb-6 text-gray-700">
           Login
@@ -82,7 +85,7 @@ function Login() {
             </div>
 
             {/* Password */}
-            <div>
+            <div className="relative">
               <label
                 htmlFor="password"
                 className="block poppins text-gray-700 text-base mb-2 font-medium"
@@ -90,15 +93,27 @@ function Login() {
                 Password
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-4 poppins py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+                className="w-full px-4 poppins relative py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
                 placeholder="Abc@123"
                 required
               />
+              {/* Eye Icon */}
+              <div
+  className="absolute top-1/2 transform -translate-y-1/2 right-3 flex items-center cursor-pointer"
+  onClick={() => setShowPassword(!showPassword)}
+>
+  {showPassword ? (
+    <FaEyeSlash className="text-gray-500 mt-8" />
+  ) : (
+    <FaEye className="text-gray-500 mt-8" />
+  )}
+</div>
+
             </div>
 
             {/* Error Message */}
@@ -134,4 +149,5 @@ function Login() {
 }
 
 export default Login;
+
 

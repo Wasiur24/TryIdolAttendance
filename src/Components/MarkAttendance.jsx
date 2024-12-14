@@ -47,41 +47,7 @@ function MarkAttendance() {
   }, [navigate]);
   const [location, setLocation] = useState({ latitude: null, longitude: null });
 
-  // useEffect(() => {
-  //   let watchId;
-
-  //   if (navigator.geolocation) {
-  //     watchId = navigator.geolocation.watchPosition(
-  //       (position) => {
-  //         const coords = {
-  //           latitude: position.coords.latitude,
-  //           longitude: position.coords.longitude,
-  //         };
-  //         console.log(coords);
-  //         setLocation(coords);
-
-  //       },
-  //       (error) => {
-  //         console.error("Error getting location:", error.message);
-  //         alert("Failed to retrieve location.");
-  //       },
-  //       {
-  //         enableHighAccuracy: true, // Use GPS for high accuracy
-  //         maximumAge: 0, // Prevent caching old location data
-  //         timeout: 10000, // Maximum time to wait for location
-  //       }
-  //     );
-  //   } else {
-  //     alert("Geolocation is not supported by this browser.");
-  //   }
-
-  //   // Cleanup function to stop watching the location
-  //   return () => {
-  //     if (watchId) {
-  //       navigator.geolocation.clearWatch(watchId);
-  //     }
-  //   };
-  // }, []);
+  
   useEffect(() => {
     let watchId;
 
@@ -284,16 +250,7 @@ function MarkAttendance() {
       }
   
       const response = await markAttendance(attendanceData)
-      //  axios.post(
-      //   "http://192.168.1.8:5000/api/attendance/mark",
-      //   attendanceData,
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   }
-      // );
+      
   
       console.log("Submission Success:", response.data);
   
@@ -341,7 +298,7 @@ function MarkAttendance() {
   )}
 
   <div
-  className={`absolute md:relative z-10 w-64 bg-white text-black px-6 transition-transform ${
+  className={`absolute md:relative z-10 w-72 bg-white text-black px-6 transition-transform ${
     isSidebarOpen ? "translate-x-0" : "-translate-x-full"
   } md:translate-x-0`}
 >
@@ -389,7 +346,7 @@ function MarkAttendance() {
       </div>
 
       {/* Main Content */}
-      <div className="min-h-screen mx-auto flex items-center justify-center ">
+      <div className="sm:h-[100vh] sm:w-[100vw] min-h-screen  mx-auto flex items-center justify-center ">
       <div className="bg-white p-4 md:p-8 rounded-lg shadow-xl w-[6000px] max-w-lg transform transition duration-500 ease-in-out hover:scale-105">
         <h2 className="text-3xl md:text-4xl font-semibold text-center text-gray-800 mb-6">
           Attendance Page
