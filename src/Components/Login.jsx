@@ -1,6 +1,7 @@
+
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { login } from "../api/auth";
 
 function Login() {
@@ -10,7 +11,7 @@ function Login() {
     password: "",
   });
   const [error, setError] = useState("");
-
+  const [statusMessage, setStatusMessage] = useState(""); //message ke lie
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -21,30 +22,34 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setStatusMessage("Logging in..."); //by default message
+
     try {
       // Make API call
-      const response = await login(formData)
-      
-      // axios.post(
-      //   "http://192.168.1.8:5000/api/auth/login",
-      //   formData
-      // );
+      const response = await login(formData);
+
       const { token, userType } = response.data;
 
-     
       localStorage.setItem("token", token);
 
+      // Show success message
+      setStatusMessage("Login Successful!");
+
       // Redirect based on user type
-      if (userType === "admin") {
-        navigate("/dashboard");
-      } else if (userType === "user") {
-        navigate("/user");
-      } else {
-        setError("Unknown user type.");
-      }
+      setTimeout(() => {
+        if (userType === "admin") {
+          navigate("/dashboard");
+        } else if (userType === "user") {
+          navigate("/user");
+        } else {
+          setError("Unknown user type.");
+        }
+      }, 2000); // Redirect after showing success message
     } catch (err) {
       console.error("Login failed:", err);
       setError("Invalid email or password. Please try again.");
+      setStatusMessage("Login Failed"); // Show failure message
     }
   };
 
@@ -99,6 +104,19 @@ function Login() {
             {/* Error Message */}
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
+            {/* Status Message */}
+            {statusMessage && (
+              <p
+                className={`mt-2 text-sm ${
+                  statusMessage.includes("Successful")
+                    ? "text-green-500"
+                    : "text-red-500"
+                }`}
+              >
+                {statusMessage}
+              </p>
+            )}
+
             {/* Submit Button */}
             <div className="flex justify-center mt-8">
               <button
@@ -116,3 +134,4 @@ function Login() {
 }
 
 export default Login;
+
