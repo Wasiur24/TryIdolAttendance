@@ -443,8 +443,45 @@ const ParticularAttendance = () => {
     filterData(filter, selectedMonth);
   };
 
+  // const handleDownload = () => {
+  //   const csvHeader = "Date,Check-In,Check-Out,Location,Employee ID\n";
+  //   const csvRows = filteredData
+  //     .map(
+  //       (record) =>
+  //         `${record?.checkin ? record.checkin.split("T")[0] : "N/A"},` +
+  //         `${
+  //           record?.checkin
+  //             ? new Date(record.checkin).toLocaleTimeString("en-IN", {
+  //                 hour: "2-digit",
+  //                 minute: "2-digit",
+  //               })
+  //             : "N/A"
+  //         },` +
+  //         `${
+  //           record?.checkout
+  //             ? new Date(record.checkout).toLocaleTimeString("en-IN", {
+  //                 hour: "2-digit",
+  //                 minute: "2-digit",
+  //               })
+  //             : "N/A"
+  //         },` +
+  //         `${record.location || "N/A"},` +
+  //         `${record.userId || "N/A"}`
+  //     )
+  //     .join("\n");
+
+  //   const csvData = csvHeader + csvRows;
+  //   const blob = new Blob([csvData], { type: "text/csv" });
+  //   const url = URL.createObjectURL(blob);
+  //   const link = document.createElement("a");
+  //   link.href = url;
+  //   link.download = "attendance_data.csv";
+  //   link.click();
+  //   URL.revokeObjectURL(url);
+  // };
   const handleDownload = () => {
-    const csvHeader = "Date,Check-In,Check-Out,Location,Employee ID\n";
+    const csvHeader =
+      "Date,Check-In,Check-Out,Latitude,Longitude,Camera Image,Employee ID,Status\n";
     const csvRows = filteredData
       .map(
         (record) =>
@@ -466,10 +503,12 @@ const ParticularAttendance = () => {
               : "N/A"
           },` +
           `${record.location || "N/A"},` +
-          `${record.userId || "N/A"}`
+          `${record.image || "N/A"},` + // Added Camera Image column
+          `${record.userId.employeeId || "N/A"},` + // Employee ID
+          `${record.attendanceStatus || "N/A"}` // Status column added
       )
       .join("\n");
-
+  
     const csvData = csvHeader + csvRows;
     const blob = new Blob([csvData], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
@@ -479,7 +518,7 @@ const ParticularAttendance = () => {
     link.click();
     URL.revokeObjectURL(url);
   };
-
+  
   const handleUserDetails = () => navigate("/reg");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const handleLogOut = () => {
@@ -623,7 +662,7 @@ const ParticularAttendance = () => {
                 <th className="border border-gray-300 px-4 py-2 text-left">Location</th>
                 <th className="border border-gray-300 px-4 py-2 text-left">Camera Image</th>
                 <th className="border border-gray-300 px-4 py-2 text-left">Employee ID</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
+                {/* <th className="border border-gray-300 px-4 py-2 text-left">Status</th> */}
               </tr>
             </thead>
 
@@ -677,7 +716,7 @@ const ParticularAttendance = () => {
                     {/* <td className="border border-gray-300 px-4 py-2">
                       {record?.attendanceStatus || "N/A"}
                     </td> */}
-                         <td
+                         {/* <td
   className={`py-2 border border-gray-300 px-4 ${
     record.attendanceStatus === "Absent"
       ? " text-red-500"
@@ -687,7 +726,7 @@ const ParticularAttendance = () => {
   }`}
 >
   {record.attendanceStatus || "Unknown"}
-</td>
+</td> */}
                   </tr>
                 ))
               ) : (

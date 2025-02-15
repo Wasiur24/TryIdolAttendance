@@ -40,6 +40,7 @@ const AllAttendance = () => {
         const response = await getAllAttendance();
         if (response.data.status === "success") {
           const reversedRecords = [...response.data.attendanceRecords].reverse();
+          console.log(response.data , 123)
           setAttendanceRecords(reversedRecords);
           setFilteredRecords(reversedRecords); 
         }
@@ -50,7 +51,8 @@ const AllAttendance = () => {
 
     fetchAttendance();
   }, []);
-
+  // console.log(1234 )
+ 
   useEffect(() => {
     const filterRecords = () => {
       let filteredData = [...attendanceRecords];
@@ -91,9 +93,42 @@ const AllAttendance = () => {
     setCurrentPage(0); 
   };
 
+  // const handleDownload = () => {
+  //   const csvHeader =
+  //     "EmployeeId,Date,Check-in Time,Check-out Time,Location,Image,Description,Status\n";
+  //   const csvRows = filteredRecords
+  //     .map(
+  //       (user) =>
+  //         `${user.userId?.employeeId || "Unknown"},` +
+  //         `${user?.checkin ? user.checkin.split("T")[0] : "N/A"},` +
+  //         `${
+  //           user?.checkin ? user.checkin.split("T")[1]?.split(".")[0] : "N/A"
+  //         },` +
+  //         `${
+  //           user?.checkout ? user.checkout.split("T")[1]?.split(".")[0] : "N/A"
+  //         },` +
+  //         `"${user.location || "N/A"}",` +
+  //         `${user.image || "N/A"},` +
+  //         `${user.description || "N/A"}`+
+  //         `${user.attendanceStatus || "N/A"}` 
+  //     )
+  //     .join("\n");
+
+  //   const csvData = csvHeader + csvRows;
+  //   const blob = new Blob([csvData], { type: "text/csv" });
+  //   const url = URL.createObjectURL(blob);
+
+  //   const link = document.createElement("a");
+  //   link.href = url;
+  //   link.download = "attendance_records.csv";
+  //   link.click();
+
+  //   URL.revokeObjectURL(url);
+  // };
+
   const handleDownload = () => {
     const csvHeader =
-      "EmployeeId,Date,Check-in Time,Check-out Time,Location,Image,Description\n";
+      "EmployeeId,Date,Check-in Time,Check-out Time,Location,Image,Description,Status\n";
     const csvRows = filteredRecords
       .map(
         (user) =>
@@ -107,21 +142,23 @@ const AllAttendance = () => {
           },` +
           `"${user.location || "N/A"}",` +
           `${user.image || "N/A"},` +
-          `${user.description || "N/A"}`
+          `${user.description || "N/A"},` + // Added comma here
+          `${user.attendanceStatus || "N/A"}` // Status is now in the correct column
       )
       .join("\n");
-
+  
     const csvData = csvHeader + csvRows;
     const blob = new Blob([csvData], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
-
+  
     const link = document.createElement("a");
     link.href = url;
     link.download = "attendance_records.csv";
     link.click();
-
+  
     URL.revokeObjectURL(url);
   };
+  
 
   const handleStatusChange = async (id, attendanceStatus) => {
     try {
@@ -130,6 +167,7 @@ const AllAttendance = () => {
         const updatedRecords = attendanceRecords.map((record) =>
           record._id === id ? { ...record, attendanceStatus: attendanceStatus } : record
         );
+       
         setAttendanceRecords(updatedRecords);
         setFilteredRecords(updatedRecords); 
       }
@@ -273,7 +311,7 @@ const AllAttendance = () => {
                   <th className="py-3 px-4 text-center">Location</th>
                   <th className="py-3 px-4 text-center">Image</th>
                   <th className="py-3 px-4 text-center">Description</th>
-                  <th className="py-3 px-4 text-center">Status</th>
+                  {/* <th className="py-3 px-4 text-center">Status</th> */}
                   <th className="py-3 px-4 text-center">Action</th>
                 </tr>
               </thead>
@@ -318,7 +356,7 @@ const AllAttendance = () => {
                       {record.description || "N/A"}
                     </td>
                     {/* <td className="py-2">{record.attendanceStatus || null}</td> */}
-                    <td
+                    {/* <td
   className={`py-2 ${
     record.attendanceStatus === "Absent"
       ? " text-red-500"
@@ -328,7 +366,7 @@ const AllAttendance = () => {
   }`}
 >
   {record.attendanceStatus || "Unknown"}
-</td>
+</td> */}
 
                     <td className="py-2">
                       <select
