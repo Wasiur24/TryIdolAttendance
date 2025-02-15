@@ -148,7 +148,7 @@ const Notification = () => {
   )}
 
   <div
-  className={`absolute md:relative z-10 w-64 bg-white text-black px-6 transition-transform ${
+  className={`fixed top-0 left-0 z-10 w-64 bg-white text-black px-6 transition-transform ${
     isSidebarOpen ? "translate-x-0" : "-translate-x-full"
   } md:translate-x-0`}
 >
@@ -219,7 +219,7 @@ const Notification = () => {
         </div>
       </div>
       {/* Main Content */}
-      <div className="flex-1 p-5">
+      <div className="flex-1 p-5 md:ml-64">
         {loading ? (
           <p>Loading...</p>
         ) : error ? (

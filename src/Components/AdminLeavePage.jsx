@@ -40,7 +40,7 @@ const AdminLeavePage = () => {
       //   },
       // })
   // console.log(response.data);
-      setLeaves(response.data.data); // Assuming `data.data` holds the leave requests
+      setLeaves(response.data.data);
     } catch (err) {
       setError("Failed to fetch leave requests");
     }
@@ -82,7 +82,7 @@ const AdminLeavePage = () => {
       //     },
       //   }
       // );
-      fetchLeaves(); // Refresh the data after action
+      fetchLeaves(); 
     } catch (err) {
       console.log(err)
       setError(`Failed to ${action} leave`);
@@ -115,7 +115,7 @@ const AdminLeavePage = () => {
   )}
 
   <div
-  className={`absolute md:relative z-10 w-64 bg-white text-black px-6 transition-transform ${
+  className={`fixed top-0 left-0 z-10 w-64 bg-white text-black px-6 transition-transform ${
     isSidebarOpen ? "translate-x-0" : "-translate-x-full"
   } md:translate-x-0`}
 >
@@ -186,8 +186,8 @@ const AdminLeavePage = () => {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-6">
+      {/* Main Content----TABLE STARTED  */}
+      <div className="flex-1 p-6 md:ml-64">
         <div className="overflow-x-auto bg-white rounded-lg shadow-md">
           <table className="min-w-full table-auto text-center">
             <thead>

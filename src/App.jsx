@@ -16,6 +16,7 @@ import UserDashboard from './Components/UserDashboard';
 import UserLeaveStatus from './Components/UserLeaveStatus';
 import MarkAttendance from './Components/MarkAttendance';
 import AdminLeavePage from './Components/AdminLeavePage';
+import MyAttendance from './Components/MyAttendance';
 // import Demo from './Components/Demo';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
       <Routes>
         {/* Define routes for different components/pages */}
         <Route path="/" element={<Login />} />
+        {/* <Route path="/" element={<Dashboard />} /> */}
         {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/attendance" element={<Attendance/>} />
         <Route path="/dashboard" element={<Dashboard/>} />
@@ -38,6 +40,7 @@ function App() {
         <Route path="/employeeleaves" element={<AdminLeavePage/>}/>
         <Route path="/userattendance" element={<MarkAttendance/>} />
         <Route path="/notifications" element={<Notification/>} />
+        <Route path="/myattendance" element={<MyAttendance/>} />
         {/* <Route path="/demo" element={<Demo/>} /> */}
       </Routes>
     </Router>

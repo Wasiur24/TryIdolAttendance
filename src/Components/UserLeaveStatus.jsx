@@ -7,6 +7,8 @@ import { TiThMenu } from "react-icons/ti";
 import { RxCross1 } from "react-icons/rx";
 import { createLeave, Myleave } from "../api/leave";
 import logo from '../assets/logo.jpg';
+import { RiShieldUserLine } from "react-icons/ri";
+
 import { FaBell } from "react-icons/fa";
 function UserLeaveStatus() {
   const navigate = useNavigate();
@@ -84,6 +86,10 @@ function UserLeaveStatus() {
   const handleMarkAttendance = () => {
     navigate("/userattendance");
   };
+  const Myattendance = () => {
+    navigate("/myattendance");
+  };
+
 
   return (
     <div className="poppins flex flex-col md:flex-row min-h-screen bg-zinc-200">
@@ -97,7 +103,7 @@ function UserLeaveStatus() {
         </button>
       )}
       <div
-        className={`absolute md:relative z-10 w-64 bg-white text-black px-6 transition-transform ${
+        className={`fixed top-0 left-0 h-screen z-10 w-64 bg-white text-black px-6 transition-transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0`}
       >
@@ -117,10 +123,20 @@ function UserLeaveStatus() {
           >
             <FaBell className="font-bold text-xl" /> All Notifications
           </button>
+
+          {/* <button
+                onClick={Myattendance}
+              className="px-4 py-2 text-center bg-zinc-200 text-black rounded hover:bg-zinc-300 hover:text-black duration-300 flex justify-evenly items-center gap-3"
+                      >
+                        <RiShieldUserLine className="font-bold text-xl" />
+                        My Attendances
+                      </button> */}
+         
           <button
             onClick={handleMarkAttendance}
             className="px-4 py-2 text-center bg-zinc-200 text-black rounded hover:bg-zinc-300 tracking-tighter hover:text-black duration-300 flex justify-evenly items-center"
           >
+             
             <IoMdCheckmarkCircleOutline className="font-bold text-xl" />
             Mark Attendance
           </button>
@@ -133,7 +149,7 @@ function UserLeaveStatus() {
           </button>
           <button
             onClick={handleLogOut}
-            className=" px-4 py-2 mt-96 bg-blue-600 text-white rounded hover:bg-blue-700 flex justify-center items-center gap-3"
+            className=" px-4 py-2 mt-72 bg-blue-600 text-white rounded hover:bg-blue-700 flex justify-center items-center gap-3"
           >
             <FaPowerOff className="font-thin text-xl" />
             Logout
@@ -142,7 +158,7 @@ function UserLeaveStatus() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-6 md:ml-64">
         <div className="overflow-x-auto bg-white rounded-lg shadow-md">
           <table className="min-w-full table-auto text-center">
             <thead>

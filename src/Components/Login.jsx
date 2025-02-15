@@ -1,14 +1,12 @@
 
-
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/auth";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
+import { FaEye, FaEyeSlash } from "react-icons/fa"; 
 
 function Login() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({   //here comes the form ka data
     email: "",
     password: "",
   });
@@ -26,20 +24,20 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setStatusMessage("Logging in..."); //by default message
+    setStatusMessage("Logging in..."); 
 
     try {
-      // Make API call
+      
       const response = await login(formData);
-
+      // console.log(formData.email)
       const { token, userType } = response.data;
 
       localStorage.setItem("token", token);
 
-      // Show success message
+      
       setStatusMessage("Login Successful!");
 
-      // Redirect based on user type
+     
       setTimeout(() => {
         if (userType === "admin") {
           navigate("/dashboard");
@@ -48,17 +46,18 @@ function Login() {
         } else {
           setError("Unknown user type.");
         }
-      }, 2000); // Redirect after showing success message
+      }, 2000); 
     } catch (err) {
       console.error("Login failed:", err);
       setError("Invalid email or password. Please try again.");
-      setStatusMessage("Login Failed"); // Show failure message
+      setStatusMessage("Login Failed"); 
     }
   };
 
   return (
-    <div className="min-h-screen sm:h-screen sm:w-screen poppins bg-gradient-to-r from-teal-100 to-cyan-700 flex items-center justify-center">
-      <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md transform transition-all duration-500 hover:scale-105 hover:shadow-2xl">
+    <div className="min-h-screen sm:h-screen sm:w-screen w-full poppins bg-gradient-to-r from-sky-400 to-blue-600
+ flex items-center justify-center px-5">
+      <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md transform transition-all duration-500 border-2 border-blue-500  hover:shadow-2xl hover:scale-105">
         <h2 className="text-3xl font-semibold text-center mb-6 text-gray-700">
           Login
         </h2>
@@ -136,7 +135,7 @@ function Login() {
             <div className="flex justify-center mt-8">
               <button
                 type="submit"
-                className="px-6 py-2 w-full mt-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300 transform hover:scale-105"
+                className="px-6 py-2 w-full mt-3 bg-gradient-to-r from-sky-500 to-blue-600  text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform "
               >
                 Login
               </button>

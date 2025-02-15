@@ -37,7 +37,7 @@ function Dashboard() {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem("token");
-         const response = await AllEmployee()
+        const response = await AllEmployee()
         //axios.get(
         //   "http://192.168.1.8:5000/api/auth/all",
         //   {
@@ -158,7 +158,7 @@ function Dashboard() {
   )}
 
   <div
-  className={`absolute md:relative z-10 w-64 bg-white text-black px-6 transition-transform ${
+  className={`fixed top-0 left-0  z-10 w-64 bg-white text-black px-6 transition-transform ${
     isSidebarOpen ? "translate-x-0" : "-translate-x-full"
   } md:translate-x-0`}
 >
@@ -230,7 +230,7 @@ function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-6 md:ml-64">
         <div className="overflow-x-auto bg-white rounded-lg shadow-md">
           <table className="min-w-full table-auto text-center">
             <thead>

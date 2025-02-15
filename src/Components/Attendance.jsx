@@ -3,8 +3,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // For navigation to the success page
-// import { Editor } from "@tinymce/tinymce-react"; // Import TinyMCE Editor
+import { useNavigate } from "react-router-dom"; 
 
 function AttendancePage() {
   const [location, setLocation] = useState(null);
@@ -81,7 +80,7 @@ function AttendancePage() {
     }
   }, []);
 
-  // Handle Check-in time
+  
   const handleCheckIn = () => {
     const currentTime = new Date().toLocaleString(); 
     setCheckInTime(currentTime);
@@ -179,7 +178,8 @@ function AttendancePage() {
       }
   
       const response = await axios.post(
-        "http://192.168.1.8:5000/api/attendance/mark",
+       " https://tryhr-be.onrender.com/api/attendance/mark",
+        // "http://192.168.1.8:5000/api/attendance/mark",
         attendanceData,
         {
           headers: {
@@ -194,7 +194,7 @@ function AttendancePage() {
       
       localStorage.removeItem("attendanceData");
   
-      navigate("/success"); // Redirect to success page
+      navigate("/success"); 
     } catch (error) {
       console.error("Error during submission:", error);
       alert("Failed to submit attendance. Please try again.");
@@ -234,7 +234,7 @@ function AttendancePage() {
           )}
         </div>
 
-        {/* **Conditional Rendering: Show Buttons or Text Editor** */}
+       
         {!(checkInTime && checkOutTime) ? (
           <div className="flex justify-between mb-6 space-x-2">
             {!checkInTime && (

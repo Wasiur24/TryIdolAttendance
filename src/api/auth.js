@@ -13,7 +13,11 @@ export const AllEmployee = async () => {
 };
 
 export const deleteUser = async (id) => {
-    return API.delete(`/auth/delete/${id}`);
+  return API.delete(`/auth/delete/${id}`);
+};
+
+export const myProfile = async () => {
+    return API.get(`/auth/profile`);
   };
 
   export const EditUser = async () => {
