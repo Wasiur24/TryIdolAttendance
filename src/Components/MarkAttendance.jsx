@@ -774,7 +774,8 @@ function MarkAttendance() {
               {!checkInTime && (
                 <button
                   onClick={handleCheckIn}
-                  className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none transition duration-300"
+                  className="w-full px-6 py-3  bg-gradient-to-r from-blue-400 to-blue-600 
+  hover:from-blue-500 hover:to-blue-700 text-white rounded-lg shadow-md  focus:outline-none transition duration-300"
                 >
                   Check-in
                 </button>
@@ -782,7 +783,8 @@ function MarkAttendance() {
               {!checkOutTime && (
                 <button
                   onClick={handleCheckOut}
-                  className="w-full px-6 py-3 bg-gray-600 text-white rounded-lg shadow-md hover:bg-gray-700 focus:outline-none transition duration-300"
+                  className="w-full px-6 py-3 bg-gradient-to-r from-zinc-600 to-zinc-700 
+  hover:from-zinc-700 hover:to-gray-800 text-white rounded-lg shadow-md hover:bg-gray-700 focus:outline-none transition duration-300"
                 >
                   Check-out
                 </button>
@@ -810,7 +812,8 @@ function MarkAttendance() {
           <div className="flex justify-center mb-6">
             <button
               onClick={handleCaptureImage}
-              className="px-8 py-3 bg-yellow-600 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-700 focus:outline-none transition duration-300"
+              className="px-8 py-3 bg-gradient-to-r from-amber-400 to-amber-500 
+  hover:from-amber-500 hover:to-amber-600 text-white font-medium rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none transition duration-300"
             >
               Capture Image
             </button>
@@ -825,7 +828,8 @@ function MarkAttendance() {
             <div className="flex justify-center mt-6">
               <button
                 onClick={handleSubmit}
-                className="px-8 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none transition duration-300"
+                className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 
+  hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold rounded-lg shadow-md  focus:outline-none transition duration-300"
               >
                 Submit
               </button>

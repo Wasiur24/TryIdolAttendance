@@ -311,8 +311,8 @@ const AllAttendance = () => {
                   <th className="py-3 px-4 text-center">Location</th>
                   <th className="py-3 px-4 text-center">Image</th>
                   <th className="py-3 px-4 text-center">Description</th>
-                  {/* <th className="py-3 px-4 text-center">Status</th> */}
-                  <th className="py-3 px-4 text-center">Action</th>
+                  <th className="py-3 px-4 text-center">Status</th>
+                  {/* <th className="py-3 px-4 text-center">Action</th> */}
                 </tr>
               </thead>
 
@@ -356,7 +356,7 @@ const AllAttendance = () => {
                       {record.description || "N/A"}
                     </td>
                     {/* <td className="py-2">{record.attendanceStatus || null}</td> */}
-                    {/* <td
+                    <td
   className={`py-2 ${
     record.attendanceStatus === "Absent"
       ? " text-red-500"
@@ -366,9 +366,9 @@ const AllAttendance = () => {
   }`}
 >
   {record.attendanceStatus || "Unknown"}
-</td> */}
+</td>
 
-                    <td className="py-2">
+                    {/* <td className="py-2">
                       <select
                         onChange={(e) =>
                           handleStatusChange(record._id, e.target.value)
@@ -379,7 +379,7 @@ const AllAttendance = () => {
                         <option value="Present">Present</option>
                         <option value="Halfday">Halfday</option>
                       </select>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>

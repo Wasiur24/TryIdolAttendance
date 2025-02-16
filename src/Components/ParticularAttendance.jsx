@@ -371,8 +371,10 @@ const ParticularAttendance = () => {
         const fetchedData = Array.isArray(response.data.userAttendance)
           ? response.data.userAttendance
           : [];
+          console.log(fetchedData)
         setAttendanceData(fetchedData.reverse());
-        setFilteredData(fetchedData); // Initialize filteredData with all data
+        setFilteredData(fetchedData); 
+        
       } catch (error) {
         console.error("Error fetching attendance data:", error);
         setAttendanceData([]);
@@ -607,8 +609,9 @@ const ParticularAttendance = () => {
         </h1>
        
         <h1 className="mb-4 bg-blue-500 px-5 py-1 rounded-md text-white absolute top-4 right-4">
-          Total Attendance {filteredData.length}
+          Total Attendance : {filteredData.length}
         </h1>
+      
 
         {/* Filter Dropdowns */}
         <div className="flex gap-4 mb-4">
@@ -652,6 +655,13 @@ const ParticularAttendance = () => {
           </div>
         </div>
 
+        <h1 className="mb-4 bg-yellow-500 px-5 py-1 rounded-md text-white absolute top-4 right-64">
+  Total LateCount : {filteredData.length > 0 ? filteredData[0].lateCount : 0}
+</h1>
+
+
+       
+
         <div className="overflow-x-auto bg-white shadow rounded-lg">
           <table className="w-full border-collapse border border-gray-300">
             <thead className="bg-blue-200">
@@ -662,13 +672,14 @@ const ParticularAttendance = () => {
                 <th className="border border-gray-300 px-4 py-2 text-left">Location</th>
                 <th className="border border-gray-300 px-4 py-2 text-left">Camera Image</th>
                 <th className="border border-gray-300 px-4 py-2 text-left">Employee ID</th>
-                {/* <th className="border border-gray-300 px-4 py-2 text-left">Status</th> */}
+                <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
               </tr>
             </thead>
 
             <tbody>
               {filteredData.length > 0 ? (
                 filteredData.map((record, index) => (
+                  
                   <tr key={index} className="hover:bg-blue-50 transition">
                     <td className="border border-gray-300 px-4 py-2">
                       {record?.checkin ? record.checkin.split("T")[0] : "N/A"}
@@ -716,7 +727,7 @@ const ParticularAttendance = () => {
                     {/* <td className="border border-gray-300 px-4 py-2">
                       {record?.attendanceStatus || "N/A"}
                     </td> */}
-                         {/* <td
+                         <td
   className={`py-2 border border-gray-300 px-4 ${
     record.attendanceStatus === "Absent"
       ? " text-red-500"
@@ -726,7 +737,8 @@ const ParticularAttendance = () => {
   }`}
 >
   {record.attendanceStatus || "Unknown"}
-</td> */}
+</td>
+
                   </tr>
                 ))
               ) : (

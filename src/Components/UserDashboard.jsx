@@ -148,7 +148,7 @@ function UserDashboard() {
             alerts.map((alert) => (
               <div
                 key={alert._id}
-                className="bg-zinc-50 p-4 mb-4 w-96 shadow-md rounded-lg transition-transform transform  hover:shadow-lg hover:bg-white duration-300 ease-in-out"
+                className="bg-white p-4 mb-4 w-96 shadow-md rounded-lg transition-transform transform  hover:shadow-lg hover:bg-white hover:scale-105 duration-500 ease-in-out"
               >
                 <h3 className="font-semibold text-blue-800 text-2xl">
                   {alert.title}
