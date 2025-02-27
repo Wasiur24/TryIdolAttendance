@@ -140,6 +140,13 @@ function UserLeaveStatus() {
             <IoMdCheckmarkCircleOutline className="font-bold text-xl" />
             Mark Attendance
           </button>
+           <button
+              onClick={Myattendance}
+              className="px-4 py-2 text-center bg-zinc-200 text-black rounded hover:bg-zinc-300 hover:text-black tracking-tighter  duration-300 flex justify-evenly items-center"
+              >
+               <RiShieldUserLine className="text-xl" />
+                My Attendances
+              </button>
           <button
             onClick={handleLeaveStatus}
             className="px-4 py-2 text-center bg-blue-500 text-white rounded hover:bg-blue-600 hover:text-white duration-300 flex justify-evenly items-center gap-3"
