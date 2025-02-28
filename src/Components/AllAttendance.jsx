@@ -93,58 +93,95 @@ const AllAttendance = () => {
     setCurrentPage(0); 
   };
 
+
   // const handleDownload = () => {
   //   const csvHeader =
   //     "EmployeeId,Date,Check-in Time,Check-out Time,Location,Image,Description,Status\n";
+  
   //   const csvRows = filteredRecords
-  //     .map(
-  //       (user) =>
+  //     .map((user) => {
+  //       // Format check-in time
+  //       const checkinTime = user?.checkin
+  //         ? new Date(user.checkin).toLocaleTimeString("en-IN", {
+  //             hour: "2-digit",
+  //             minute: "2-digit",
+  //             hour12: true,
+  //             timeZone: "Asia/Kolkata",
+  //           })
+  //         : "N/A";
+  
+  //       // Format check-out time
+  //       const checkoutTime = user?.checkout
+  //         ? new Date(user.checkout).toLocaleTimeString("en-IN", {
+  //             hour: "2-digit",
+  //             minute: "2-digit",
+  //             hour12: true,
+  //             timeZone: "Asia/Kolkata",
+  //           })
+  //         : "N/A";
+  
+  //       return (
   //         `${user.userId?.employeeId || "Unknown"},` +
   //         `${user?.checkin ? user.checkin.split("T")[0] : "N/A"},` +
-  //         `${
-  //           user?.checkin ? user.checkin.split("T")[1]?.split(".")[0] : "N/A"
-  //         },` +
-  //         `${
-  //           user?.checkout ? user.checkout.split("T")[1]?.split(".")[0] : "N/A"
-  //         },` +
+  //         `${checkinTime},` + // Use formatted check-in time
+  //         `${checkoutTime},` + // Use formatted check-out time
   //         `"${user.location || "N/A"}",` +
   //         `${user.image || "N/A"},` +
-  //         `${user.description || "N/A"}`+
-  //         `${user.attendanceStatus || "N/A"}` 
-  //     )
+  //         `${user.description || "N/A"},` +
+  //         `${user.attendanceStatus || "N/A"}` // Status is now in the correct column
+  //       );
+  //     })
   //     .join("\n");
-
+  
   //   const csvData = csvHeader + csvRows;
   //   const blob = new Blob([csvData], { type: "text/csv" });
   //   const url = URL.createObjectURL(blob);
-
+  
   //   const link = document.createElement("a");
   //   link.href = url;
   //   link.download = "attendance_records.csv";
   //   link.click();
-
+  
   //   URL.revokeObjectURL(url);
   // };
-
   const handleDownload = () => {
     const csvHeader =
-      "EmployeeId,Date,Check-in Time,Check-out Time,Location,Image,Description,Status\n";
+      "EmployeeId,Date,Check-in Time,Check-out Time,Location,Image,Description,Working Hours,Status\n"; // Added "Working Hours" column
+  
     const csvRows = filteredRecords
-      .map(
-        (user) =>
+      .map((user) => {
+        // Format check-in time
+        const checkinTime = user?.checkin
+          ? new Date(user.checkin).toLocaleTimeString("en-IN", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+              timeZone: "Asia/Kolkata",
+            })
+          : "N/A";
+  
+        // Format check-out time
+        const checkoutTime = user?.checkout
+          ? new Date(user.checkout).toLocaleTimeString("en-IN", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+              timeZone: "Asia/Kolkata",
+            })
+          : "N/A";
+  
+        return (
           `${user.userId?.employeeId || "Unknown"},` +
           `${user?.checkin ? user.checkin.split("T")[0] : "N/A"},` +
-          `${
-            user?.checkin ? user.checkin.split("T")[1]?.split(".")[0] : "N/A"
-          },` +
-          `${
-            user?.checkout ? user.checkout.split("T")[1]?.split(".")[0] : "N/A"
-          },` +
+          `${checkinTime},` + // Use formatted check-in time
+          `${checkoutTime},` + // Use formatted check-out time
           `"${user.location || "N/A"}",` +
           `${user.image || "N/A"},` +
-          `${user.description || "N/A"},` + // Added comma here
+          `${user.description || "N/A"},` +
+          `${user.totalWorkHours || "N/A"},` + // Added Working Hours
           `${user.attendanceStatus || "N/A"}` // Status is now in the correct column
-      )
+        );
+      })
       .join("\n");
   
     const csvData = csvHeader + csvRows;
@@ -158,7 +195,6 @@ const AllAttendance = () => {
   
     URL.revokeObjectURL(url);
   };
-  
 
   const handleStatusChange = async (id, attendanceStatus) => {
     try {
@@ -255,7 +291,7 @@ const AllAttendance = () => {
               localStorage.removeItem("token");
               navigate("/");
             }}
-            className=" px-4 py-2 mt-56 bg-blue-600 text-white rounded hover:bg-blue-700 flex justify-center items-center gap-3"
+            className=" px-4 py-2 mt-40 bg-blue-600 text-white rounded hover:bg-blue-700 flex justify-center items-center gap-3"
           >
             <FaPowerOff className="font-thin text-xl " />
             Logout
@@ -311,6 +347,7 @@ const AllAttendance = () => {
                   <th className="py-3 px-4 text-center">Location</th>
                   <th className="py-3 px-4 text-center">Image</th>
                   <th className="py-3 px-4 text-center">Description</th>
+                  <th className="py-3 px-4 text-center">Working Hrs</th>
                   <th className="py-3 px-4 text-center">Status</th>
                   {/* <th className="py-3 px-4 text-center">Action</th> */}
                 </tr>
@@ -323,7 +360,7 @@ const AllAttendance = () => {
                     <td className="py-2">
                       {record.checkin ? record.checkin.split("T")[0] : "N/A"}
                     </td>
-                    <td className="py-2">
+                    {/* <td className="py-2">
                       {record.checkin
                         ? new Date(record.checkin).toLocaleTimeString("en-IN", {
                             hour12: false,
@@ -338,8 +375,45 @@ const AllAttendance = () => {
                             timeZone: "Asia/Kolkata",
                           })
                         : "N/A"}
-                    </td>
+                    </td> */}
+                    {/* <td className="py-2">
+  {record.checkin
+    ? new Date(record.checkin).toLocaleTimeString("en-IN", {
+        hour12: true, // Set to true for 12-hour format
+        timeZone: "Asia/Kolkata",
+      })
+    : "N/A"}
+</td>
+<td className="py-2">
+  {record.checkout
+    ? new Date(record.checkout).toLocaleTimeString("en-IN", {
+        hour12: true, // Set to true for 12-hour format
+        timeZone: "Asia/Kolkata",
+      })
+    : "N/A"}
+</td> */}
+<td className="py-2">
+  {record.checkin
+    ? new Date(record.checkin).toLocaleTimeString("en-IN", {
+        hour: "2-digit", // Show only hours
+        minute: "2-digit", // Show only minutes
+        hour12: true, // 12-hour format
+        timeZone: "Asia/Kolkata",
+      })
+    : "N/A"}
+</td>
+<td className="py-2">
+  {record.checkout
+    ? new Date(record.checkout).toLocaleTimeString("en-IN", {
+        hour: "2-digit", // Show only hours
+        minute: "2-digit", // Show only minutes
+        hour12: true, // 12-hour format
+        timeZone: "Asia/Kolkata",
+      })
+    : "N/A"}
+</td>
                     <td className="py-2">{record.location || "N/A"}</td>
+                   
                     <td className="py-3 px-4 text-sm flex justify-center items-center">
                       {record.image ? (
                         <a
@@ -355,6 +429,7 @@ const AllAttendance = () => {
                     <td className="py-3 px-4 text-sm text-left">
                       {record.description || "N/A"}
                     </td>
+                    <td className="py-2">{record.totalWorkHours || "N/A"}</td>
                     {/* <td className="py-2">{record.attendanceStatus || null}</td> */}
                     <td
   className={`py-2 ${

@@ -156,7 +156,9 @@ function UserLeaveStatus() {
           </button>
           <button
             onClick={handleLogOut}
-            className=" px-4 py-2 mt-72 bg-blue-600 text-white rounded hover:bg-blue-700 flex justify-center items-center gap-3"
+            className="px-4 py-2 mt-16 bg-gradient-to-r from-red-500 to-red-700 text-white rounded hover:from-red-600 hover:to-red-800 flex justify-center items-center gap-3 transition-all duration-300"
+
+            // className=" px-4 py-2 mt-72 bg-blue-600 text-white rounded hover:bg-blue-700 flex justify-center items-center gap-3"
           >
             <FaPowerOff className="font-thin text-xl" />
             Logout

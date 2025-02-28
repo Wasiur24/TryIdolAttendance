@@ -595,7 +595,7 @@ const ParticularAttendance = () => {
 
           <button
             onClick={handleLogOut}
-            className=" px-4 py-2 mt-56 bg-blue-600 text-white rounded hover:bg-blue-700 flex justify-center items-center gap-3"
+            className=" px-4 py-2 mt-40 bg-blue-600 text-white rounded hover:bg-blue-700 flex justify-center items-center gap-3"
           >
             <FaPowerOff className="font-thin text-xl " />
             Logout

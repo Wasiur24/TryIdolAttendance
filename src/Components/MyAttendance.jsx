@@ -120,59 +120,127 @@ setAttendanceData(reversedData);
   //   link.click();
   //   URL.revokeObjectURL(url);
   // };
+  // const handleDownload = () => {
+  //   if (attendanceData.length === 0) {
+  //     alert("No attendance records to download.");
+  //     return;
+  //   }
+  
+   
+  //   const csvHeader = "Date,Check-In,Check-Out,Location,Camera Image,Employee ID,Status\n";
+  
+    
+  //   const csvRows = attendanceData
+  //     .map((record) => {
+        
+  //       const date = record.checkin
+  //         ? new Date(record.checkin).toLocaleDateString()
+  //         : "N/A";
+  
+       
+  //       const checkInTime = record.checkin
+  //         ? new Date(record.checkin).toLocaleTimeString("en-IN", {
+  //             hour: "2-digit",
+  //             minute: "2-digit",
+  //           })
+  //         : "N/A";
+  
+
+  //       const checkOutTime = record.checkout
+  //         ? new Date(record.checkout).toLocaleTimeString("en-IN", {
+  //             hour: "2-digit",
+  //             minute: "2-digit",
+  //           })
+  //         : "N/A";
+  
+       
+  //       const location = typeof record.location === "string" ? record.location : "N/A";
+  
+        
+  //       const cameraImage = record.image ? `View Image` : "N/A";
+  
+        
+  //       const employeeId = userData?.employeeId || "N/A";
+  
+       
+  //       const status = record.attendanceStatus || "N/A";
+  
+  //       return `${date},${checkInTime},${checkOutTime},${location},${cameraImage},${employeeId},${status}`;
+  //     })
+  //     .join("\n");
+  
+    
+  //   const csvData = csvHeader + csvRows;
+  
+    
+  //   const blob = new Blob([csvData], { type: "text/csv" });
+  //   const url = URL.createObjectURL(blob);
+  //   const link = document.createElement("a");
+  //   link.href = url;
+  //   link.download = "attendance_data.csv";
+  //   link.click();
+  //   URL.revokeObjectURL(url);
+  // };
+   
   const handleDownload = () => {
     if (attendanceData.length === 0) {
       alert("No attendance records to download.");
       return;
     }
   
-   
-    const csvHeader = "Date,Check-In,Check-Out,Location,Camera Image,Employee ID,Status\n";
+    // Define the CSV header
+    const csvHeader = "Date,Check-In,Check-Out,Latitude,Longitude,Camera Image,Employee ID,Working Hrs.,Status\n";
   
-    
+    // Map attendance data to CSV rows
     const csvRows = attendanceData
       .map((record) => {
-        
+        // Format date
         const date = record.checkin
           ? new Date(record.checkin).toLocaleDateString()
           : "N/A";
   
-       
+        // Format check-in time
         const checkInTime = record.checkin
           ? new Date(record.checkin).toLocaleTimeString("en-IN", {
               hour: "2-digit",
               minute: "2-digit",
+              hour12: true,
             })
           : "N/A";
   
-
+        // Format check-out time
         const checkOutTime = record.checkout
           ? new Date(record.checkout).toLocaleTimeString("en-IN", {
               hour: "2-digit",
               minute: "2-digit",
+              hour12: true,
             })
           : "N/A";
   
-       
+        // Format location
         const location = typeof record.location === "string" ? record.location : "N/A";
   
-        
+        // Format camera image link
         const cameraImage = record.image ? `View Image` : "N/A";
   
-        
+        // Format employee ID
         const employeeId = userData?.employeeId || "N/A";
   
-       
+        // Format total working hours
+        const totalWorkHours = record.totalWorkHours || "N/A";
+  
+        // Format status
         const status = record.attendanceStatus || "N/A";
   
-        return `${date},${checkInTime},${checkOutTime},${location},${cameraImage},${employeeId},${status}`;
+        // Return the CSV row
+        return `${date},${checkInTime},${checkOutTime},${location},${cameraImage},${employeeId},${totalWorkHours},${status}`;
       })
       .join("\n");
   
-    
+    // Combine header and rows
     const csvData = csvHeader + csvRows;
   
-    
+    // Create and download the CSV file
     const blob = new Blob([csvData], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -181,6 +249,7 @@ setAttendanceData(reversedData);
     link.click();
     URL.revokeObjectURL(url);
   };
+ 
   const handleLogOut = () => {
     localStorage.removeItem("token");
     navigate("/");
@@ -245,7 +314,8 @@ setAttendanceData(reversedData);
           </button>
           <button
             onClick={handleLogOut}
-            className="px-4 py-2 mt-72 bg-blue-600 text-white rounded hover:bg-blue-700 flex justify-center items-center gap-3"
+             className="px-4 py-2 mt-16 bg-gradient-to-r from-red-500 to-red-700 text-white rounded hover:from-red-600 hover:to-red-800 flex justify-center items-center gap-3 transition-all duration-300"
+            // className="px-4 py-2 mt-72 bg-blue-600 text-white rounded hover:bg-blue-700 flex justify-center items-center gap-3"
           >
             <FaPowerOff className="font-thin text-xl" />
             Logout
@@ -274,6 +344,7 @@ setAttendanceData(reversedData);
                 <th className="border px-4 py-2">Location</th>
                 <th className="border px-4 py-2">Camera Image</th>
                 <th className="border px-4 py-2">Employee ID</th>
+                <th className="border px-4 py-2">Working Hrs.</th>
                 <th className="border px-4 py-2">Status</th>
               </tr>
             </thead>
@@ -320,9 +391,16 @@ setAttendanceData(reversedData);
   </a>
 </td>
 
+
+
           <td className="border px-4 py-2">
           {userData.employeeId}
            
+          </td>
+
+          <td className="border px-4 py-2">
+            
+           <h1>{record.totalWorkHours}</h1>
           </td>
          
           <td className="border px-4 py-2">

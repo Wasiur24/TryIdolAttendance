@@ -426,7 +426,8 @@ function MarkAttendance() {
           </button>
           <button
             onClick={handleLogOut}
-            className="px-4 py-2 mt-72 bg-blue-600 text-white rounded hover:bg-blue-700 flex justify-center items-center gap-3"
+             className="px-4 py-2 mt-16 bg-gradient-to-r from-red-500 to-red-700 text-white rounded hover:from-red-600 hover:to-red-800 flex justify-center items-center gap-3 transition-all duration-300"
+            // className="px-4 py-2 mt-72 bg-blue-600 text-white rounded hover:bg-blue-700 flex justify-center items-center gap-3"
           >
             <FaPowerOff className="font-thin text-xl" />
             Logout
@@ -494,7 +495,7 @@ function MarkAttendance() {
             </div>
           ) : null}
 
-          {checkInTime && (
+          {/* {checkInTime && ( */}
             <div className="mb-6">
               <label
                 htmlFor="productivity"
@@ -511,7 +512,7 @@ function MarkAttendance() {
                 className="w-full px-4 py-2 bg-gray-100 text-gray-700 border rounded-lg focus:outline-none resize-none h-32"
               ></textarea>
             </div>
-          )}
+          {/* )} */}
 
           <div className="flex justify-center mb-6">
             <button
