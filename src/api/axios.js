@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API = axios.create({
  baseURL: "https://tryhr-be.onrender.com/api", 
-// baseURL: "http://192.168.1.7:5000/api/"
+// baseURL: "http://192.168.69.197:5000/api/"
 });
 
 // Interceptor to attach token

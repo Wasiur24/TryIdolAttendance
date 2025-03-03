@@ -1,4 +1,6 @@
 
+
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -21,6 +23,9 @@ function MarkAttendance() {
   const [productivity, setProductivity] = useState("");
   const [isImageClicked, setIsImageClicked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCheckedIn, setIsCheckedIn] = useState(
+    localStorage.getItem("isCheckedIn") === "true" // Initialize from localStorage
+  );
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -125,24 +130,24 @@ function MarkAttendance() {
   const handleCheckIn = async () => {
     const currentTime = new Date().toLocaleString();
     const token = localStorage.getItem("token");
-  
+
     if (!token) {
       alert("Authorization token is missing. Please log in again.");
       return;
     }
-  
+
     if (!location || !location.latitude || !location.longitude) {
       alert("Location data is missing.");
       return;
     }
-  
+
     const locationString = `${location.latitude}, ${location.longitude}`;
 
     const checkInData = {
       checkin: currentTime,
-      location: locationString,  
+      location: locationString,
     };
-  
+
     try {
       const response = await axios.post(
         "https://tryhr-be.onrender.com/api/attendance/checkin",
@@ -154,17 +159,20 @@ function MarkAttendance() {
           },
         }
       );
-  
-      console.log("Check-in Success:", response.data);
+
+      // console.log("Check-in Success:", response.data);
+      alert("Check-in successful. Please do not log out; simply close the tab when you're done");
       setCheckInTime(currentTime);
+      setIsCheckedIn(true); // Update check-in state
+      localStorage.setItem("isCheckedIn", "true"); // Store in localStorage
     } catch (error) {
       console.error("Error during check-in:", error);
       alert(`Failed to check-in: ${error.response?.data?.message || error.message}`);
     }
   };
-  
+
   // const handleCheckOut = async () => {
-  //   const currentTime = new Date().toLocaleString();
+  //   const currentTime = new Date().toISOString();
   //   const token = localStorage.getItem("token");
 
   //   if (!token) {
@@ -172,20 +180,31 @@ function MarkAttendance() {
   //     return;
   //   }
 
+  //   if (!capturedImage) {
+  //     alert("Captured image is missing.");
+  //     return;
+  //   }
+
+  //   if (!productivity) {
+  //     alert("Productivity description is missing.");
+  //     return;
+  //   }
+
   //   const checkOutData = {
   //     checkout: currentTime,
   //     image: capturedImage,
-  //     discription: productivity,
+  //     description: productivity,
   //   };
 
   //   console.log("Check-out data:", checkOutData);
 
   //   try {
   //     const response = await axios.post(
-  //       "http://192.168.1.25:5000/api/attendance/checkout",
+  //       "http://192.168.1.16:5000/api/attendance/checkout",
   //       checkOutData,
   //       {
   //         headers: {
+  //           "Content-Type": "application/json",
   //           Authorization: `Bearer ${token}`,
   //         },
   //       }
@@ -193,20 +212,12 @@ function MarkAttendance() {
 
   //     console.log("Check-out Success:", response.data);
   //     setCheckOutTime(currentTime);
-
-  //     // localStorage.setItem(
-  //     //   "attendanceData",
-  //     //   JSON.stringify({
-  //     //     checkin: checkInTime,
-  //     //     checkout: currentTime,
-  //     //     image: capturedImage,
-  //     //     location: location,
-  //     //     productivity: productivity,
-  //     //   })
-  //     // );
+  //     setIsCheckedIn(false); // Update check-in state
+  //     localStorage.setItem("isCheckedIn", "false"); // Store in localStorage
+  //     navigate("/success"); // Navigate to success page after check-out
   //   } catch (error) {
   //     console.error("Error during check-out:", error);
-  //     alert("Failed to check-out. Please try again.");
+  //     alert(`Failed to check-out: ${error.response?.data?.message || error.message}`);
   //   }
   // };
   const handleCheckOut = async () => {
@@ -231,7 +242,7 @@ function MarkAttendance() {
     const checkOutData = {
       checkout: currentTime,
       image: capturedImage,
-      description: productivity, 
+      description: productivity,
     };
   
     console.log("Check-out data:", checkOutData);
@@ -250,24 +261,67 @@ function MarkAttendance() {
   
       console.log("Check-out Success:", response.data);
       setCheckOutTime(currentTime);
-  
-      
-      // localStorage.setItem(
-      //   "attendanceData",
-      //   JSON.stringify({
-      //     checkin: checkInTime,
-      //     checkout: currentTime,
-      //     image: capturedImage,
-      //     location: location,
-      //     productivity: productivity,
-      //   })
-      // );
+      setIsCheckedIn(false); // Update check-in state
+      localStorage.setItem("isCheckedIn", "false"); // Store in localStorage
+      setProductivity(""); // Clear productivity state
+      navigate("/success"); // Navigate to success page after check-out
     } catch (error) {
       console.error("Error during check-out:", error);
       alert(`Failed to check-out: ${error.response?.data?.message || error.message}`);
     }
   };
   
+  const handleSubmit = async () => {
+    if (!checkInTime && !checkOutTime) {
+      alert("Please record at least one of the times: Check-in or Check-out.");
+      return;
+    }
+  
+    if (!location) {
+      alert("Location is required. Please record your location.");
+      return;
+    }
+  
+    if (!productivity) {
+      alert("Mention your today's Productivity.");
+      return;
+    }
+  
+    setIsSubmitting(true);
+  
+    const locationString = `${location.latitude}, ${location.longitude}`;
+  
+    const attendanceData = {
+      location: locationString,
+      image: capturedImage,
+      checkin: checkInTime ? new Date(checkInTime).toISOString() : "",
+      checkout: checkOutTime ? new Date(checkOutTime).toISOString() : "",
+      description: productivity,
+    };
+  
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Authorization token is missing. Please log in again.");
+        setIsSubmitting(false);
+        return;
+      }
+  
+      // Remove productivity from localStorage
+      localStorage.removeItem("attendanceData");
+  
+      // Clear productivity state
+      setProductivity("");
+  
+      setTimeout(() => {
+        navigate("/success");
+      }, 1000);
+    } catch (error) {
+      console.error("Error during submission:", error);
+      alert("Failed to submit attendance. Please try again.");
+      setIsSubmitting(false);
+    }
+  };
   const handleCaptureImage = () => {
     const canvas = canvasRef.current;
     const video = videoRef.current;
@@ -289,67 +343,73 @@ function MarkAttendance() {
     }
   };
 
+  // const handleProductivityChange = async (e) => {
+  //   setProductivity(e.target.value);
+  //   const storedData = JSON.parse(localStorage.getItem("attendanceData")) || {};
+  //   localStorage.setItem(
+  //     "attendanceData",
+  //     JSON.stringify({ ...storedData, productivity: e.target.value })
+  //   );
+  // };
+
   const handleProductivityChange = async (e) => {
     setProductivity(e.target.value);
-    const storedData = JSON.parse(localStorage.getItem("attendanceData")) || {};
-    localStorage.setItem(
-      "attendanceData",
-      JSON.stringify({ ...storedData, productivity: e.target.value })
-    );
+    // Do not save productivity in localStorage
   };
 
-  const handleSubmit = async () => {
-    if (!checkInTime && !checkOutTime) {
-      alert("Please record at least one of the times: Check-in or Check-out.");
-      return;
-    }
+  // const handleSubmit = async () => {
+  //   if (!checkInTime && !checkOutTime) {
+  //     alert("Please record at least one of the times: Check-in or Check-out.");
+  //     return;
+  //   }
 
-    if (!location) {
-      alert("Location is required. Please record your location.");
-      return;
-    }
+  //   if (!location) {
+  //     alert("Location is required. Please record your location.");
+  //     return;
+  //   }
 
-    if (!productivity) {
-      alert("Mention your today's Productivity.");
-      return;
-    }
+  //   if (!productivity) {
+  //     alert("Mention your today's Productivity.");
+  //     return;
+  //   }
 
-    setIsSubmitting(true);
+  //   setIsSubmitting(true);
 
-    const locationString = `${location.latitude}, ${location.longitude}`;
+  //   const locationString = `${location.latitude}, ${location.longitude}`;
 
-    const attendanceData = {
-      location: locationString,
-      image: capturedImage,
-      checkin: checkInTime ? new Date(checkInTime).toISOString() : "",
-      checkout: checkOutTime ? new Date(checkOutTime).toISOString() : "",
-      description: productivity,
-    };
+  //   const attendanceData = {
+  //     location: locationString,
+  //     image: capturedImage,
+  //     checkin: checkInTime ? new Date(checkInTime).toISOString() : "",
+  //     checkout: checkOutTime ? new Date(checkOutTime).toISOString() : "",
+  //     description: productivity,
+  //   };
 
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Authorization token is missing. Please log in again.");
-        setIsSubmitting(false);
-        return;
-      }
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     if (!token) {
+  //       alert("Authorization token is missing. Please log in again.");
+  //       setIsSubmitting(false);
+  //       return;
+  //     }
 
-      localStorage.removeItem("attendanceData");
+  //     localStorage.removeItem("attendanceData");
 
-      setTimeout(() => {
-        navigate("/success");
-      }, 1000);
-    } catch (error) {
-      console.error("Error during submission:", error);
-      alert("Failed to submit attendance. Please try again.");
-      setIsSubmitting(false);
-    }
-  };
-
+  //     setTimeout(() => {
+  //       navigate("/success");
+  //     }, 1000);
+  //   } catch (error) {
+  //     console.error("Error during submission:", error);
+  //     alert("Failed to submit attendance. Please try again.");
+  //     setIsSubmitting(false);
+  //   }
+  // };
+  
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleLogOut = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("isCheckedIn"); // Clear check-in state on logout
     navigate("/");
   };
 
@@ -422,12 +482,11 @@ function MarkAttendance() {
             className="px-4 py-2 text-center bg-zinc-200 text-black rounded hover:bg-zinc-300 hover:text-black duration-300 flex justify-evenly items-center gap-3"
           >
             <BiSolidCalendarExclamation className="font-bold text-xl" />
-            Leave Status
+            Leave Status 
           </button>
           <button
             onClick={handleLogOut}
-             className="px-4 py-2 mt-16 bg-gradient-to-r from-red-500 to-red-700 text-white rounded hover:from-red-600 hover:to-red-800 flex justify-center items-center gap-3 transition-all duration-300"
-            // className="px-4 py-2 mt-72 bg-blue-600 text-white rounded hover:bg-blue-700 flex justify-center items-center gap-3"
+            className="px-4 py-2 mt-16 bg-gradient-to-r from-red-500 to-red-700 text-white rounded hover:from-red-600 hover:to-red-800 flex justify-center items-center gap-3 transition-all duration-300"
           >
             <FaPowerOff className="font-thin text-xl" />
             Logout
@@ -460,7 +519,7 @@ function MarkAttendance() {
               Image Clicked!
             </p>
           )}
-
+ 
           <div className="flex flex-col space-y-4 mb-6">
             {location && (
               <input
@@ -472,47 +531,48 @@ function MarkAttendance() {
             )}
           </div>
 
-          {!(checkInTime && checkOutTime) ? (
+          {!isCheckedIn && !checkInTime && (
             <div className="flex justify-between mb-6 space-x-2">
-              {!checkInTime && (
-                <button
-                  onClick={handleCheckIn}
-                  className="w-full px-6 py-3  bg-gradient-to-r from-blue-400 to-blue-600 
-  hover:from-blue-500 hover:to-blue-700 text-white rounded-lg shadow-md  focus:outline-none transition duration-300"
-                >
-                  Check-in
-                </button>
-              )}
-              {!checkOutTime && (
-                <button
-                  onClick={handleCheckOut}
-                  className="w-full px-6 py-3 bg-gradient-to-r from-zinc-600 to-zinc-700 
-  hover:from-zinc-700 hover:to-gray-800 text-white rounded-lg shadow-md hover:bg-gray-700 focus:outline-none transition duration-300"
-                >
-                  Check-out
-                </button>
-              )}
-            </div>
-          ) : null}
-
-          {/* {checkInTime && ( */}
-            <div className="mb-6">
-              <label
-                htmlFor="productivity"
-                className="block text-gray-700 font-semibold mb-2"
+              <button
+                onClick={handleCheckIn}
+                className="w-full px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-600 
+  hover:from-blue-500 hover:to-blue-700 text-white rounded-lg shadow-md focus:outline-none transition duration-300"
               >
-                Daily Productivity:
-              </label>
-              <textarea
-                id="productivity"
-                value={productivity}
-                required
-                onChange={handleProductivityChange}
-                placeholder="Describe your productivity for today..."
-                className="w-full px-4 py-2 bg-gray-100 text-gray-700 border rounded-lg focus:outline-none resize-none h-32"
-              ></textarea>
+                Check-in
+              </button>
             </div>
-          {/* )} */}
+          )}
+
+          {isCheckedIn && !checkOutTime && (
+            <div className="flex justify-between mb-6 space-x-2">
+              <button
+                onClick={handleCheckOut}
+                className="w-full px-6 py-3 bg-gradient-to-r from-zinc-600 to-zinc-700 
+  hover:from-zinc-700 hover:to-gray-800 text-white rounded-lg shadow-md hover:bg-gray-700 focus:outline-none transition duration-300"
+              >
+                Check-out
+              </button>
+            </div>
+          )}
+
+          <div className="mb-6">
+            <label
+              htmlFor="productivity"
+              className="block text-gray-700 font-semibold mb-2"
+            >
+              Today's Task Report : 
+              {/* Daily Productivity: */}
+            </label>
+            <textarea
+              id="productivity"
+              value={productivity}
+              required
+              onChange={handleProductivityChange}
+              // placeholder="Describe your productivity for today..."
+              placeholder="Provide your task report for today..."
+              className="w-full px-4 py-2 bg-gray-100 text-gray-700 border rounded-lg focus:outline-none resize-none h-32"
+            ></textarea>
+          </div>
 
           <div className="flex justify-center mb-6">
             <button
@@ -523,7 +583,7 @@ function MarkAttendance() {
               Capture Image
             </button>
           </div>
-
+{/* 
           {isSubmitting ? (
             <p className="text-center text-green-600 font-semibold mb-4">
               Your attendance is submitting...
@@ -538,7 +598,7 @@ function MarkAttendance() {
                 Submit
               </button>
             </div>
-          )}
+          )} */}
 
           <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
         </div>
